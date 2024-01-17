@@ -1,6 +1,7 @@
 /** @format */
 
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const Books = () => {
   const [books, setBooks] = useState([]);
@@ -8,8 +9,8 @@ const Books = () => {
   useEffect(() => {
     const fetchAllBooks = async () => {
       try {
-        const res = await axios.get("https:localhost:8800/books");
-        console.log(res);
+        const res = await axios.get("http://localhost:8800/books");
+        setBooks(res.data);
       } catch (err) {
         console.log(err);
       }
@@ -19,7 +20,16 @@ const Books = () => {
 
   return (
     <div>
-      <p>Books</p>
+      <h1>Book Club Group</h1>
+      {books.map((book) => (
+        <div className="book" key={book.id}>
+          {book.cover && <img src={book.cover} alt="/" />}
+          <h2>{book.title}</h2>
+          <h2>{book.desc}</h2>
+          {/* <span>{book.price}</span>{" "} */}
+          {/* Assuming 'price' is the correct property name */}
+        </div>
+      ))}
     </div>
   );
 };
