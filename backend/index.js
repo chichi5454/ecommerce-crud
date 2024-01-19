@@ -34,16 +34,46 @@ app.get("/books", (req, res) => {
 
 // create another book
 app.post("/books", (req, res) => {
-  const q = "INSERT INTO books(`title`, `desc`, `cover`) VALUES(?)";
+  const q = "INSERT INTO books(`title`, `desc`,`price`, `cover`) VALUES(?)";
   const values = [
-    "title from backend",
-    "description from backend",
-    "cover from backend",
+    req.body.title,
+    req.body.desc,
+    req.body.price,
+    req.body.cover,
   ];
 
   db.query(q, [values], (err, data) => {
     if (err) return res.json(err);
     return res.json(data);
+  });
+});
+
+// delete endpoint & params represent the link ./books/:id
+app.delete("/books/:id", (req, res) => {
+  const bookID = req.params.id;
+  const q = "DELETE FROM books WHERE id= ?";
+
+  db.query(q, [bookID], (err, data) => {
+    if (err) return res.json(err);
+    return res.json("Book has been deleted successfully");
+  });
+});
+
+// updating new book
+app.put("/books/:id", (req, res) => {
+  const bookID = req.params.id;
+  const q = "UPDATE books SET title=?, `desc`=?, price=?, cover=? WHERE id=?";
+
+  const values = [
+    req.body.title,
+    req.body.desc,
+    req.body.price,
+    req.body.cover,
+  ];
+
+  db.query(q, [...values, bookID], (err, data) => {
+    if (err) return res.json(err);
+    return res.json("Book has been updated successfully");
   });
 });
 
